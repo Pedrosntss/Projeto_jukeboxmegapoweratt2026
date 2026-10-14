@@ -212,7 +212,7 @@ def tocar_musica ():
     # Espera o tempo do gap (convertido para segundos)
       time.sleep(gap / 1000)
 
-  return tocar_musica
+  return tocar_musica   
 
 
 
