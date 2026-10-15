@@ -1,42 +1,39 @@
 import serial
 import time
-import pygame
 
-# Configuração da porta serial (substitua 'COM3' pela porta correta do seu Arduino, ex: '/dev/ttyUSB0' no Linux)
-PORTA = 'COM3'
+PORTA = 'COM3'  # Ajuste para a sua porta
+BAUDRATE = 9600
 
-print("Iniciando o cérebro da Jukebox...")
+print("Conectando ao Arduino...")
+arduino = serial.Serial(PORTA, BAUDRATE, timeout=2)
+time.sleep(2)
+print("Conectado! Tocando dueto limpo...")
 
-# Inicializa o Pygame Mixer para o som
-pygame.mixer.init()
+# Partitura: [Frequência Melodia, Frequência Baixo, Duração Total em ms]
+partitura = [
+    [523, 131, 400],  # Dó agudo + Dó grave
+    [587, 147, 400],  # Ré agudo + Ré grave
+    [659, 165, 400],  # Mi agudo + Mi grave
+    [698, 175, 500],  # Fá agudo + Fá grave
+    [659, 165, 400],  # Mi agudo + Mi grave
+    [587, 147, 400],  # Ré agudo + Ré grave
+    [523, 131, 800],  # Dó agudo + Dó grave final
+]
 
-try: 
-    # Abre a conexão serial com o Arduino
-    arduino = serial.Serial(PORTA, 9600, timeout=1)
-    time.sleep(2) 
-    print(f"Conectado ao arduino na porta {PORTA}. Aguardando comandos...")
+for acorde in partitura:
+    freq_m = acorde[0]
+    freq_b = acorde[1]
+    duracao = acorde[2]
 
-    while True:
-        # Verifica se chegou alguma informação do Arduino
+    # Envia o pacote completo para o Arduino processar o arpejo internamente
+    comando = f"{freq_m},{freq_b},{duracao}\n"
+    arduino.write(comando.encode('utf-8'))
+
+    # O Python aguarda o Arduino tocar o acorde inteiro e responder "OK"
+    resposta = ""
+    while "OK" not in resposta:
         if arduino.in_waiting > 0:
-            # Lê a linha enviada pelo Arduino e remove espaços/quebras de linha
-            comando = arduino.readline().decode('utf-8').strip()
+            resposta = arduino.readline().decode('utf-8').strip()
 
-            print(f"Comando recebido do Arduino: {comando}")
-
-            if comando == '1': 
-                print("Tocando a musica 1")
-                pygame.mixer.music.load("musica mp3")
-
-            elif comando == 2:
-                print("Parando a Musica...")
-                pygame.mixer.music.stop()
-
-    # Pequena pausa para não sobrecarregar o processador do computador
-        time.sleep(0.1)
-
-except serial.SerialException:
-    print(f"Erro: Não foi possível conectar na porta {PORTA}. Verifique se o Monitor Serial da Arduino IDE está fechado.")
-except KeyboardInterrupt:
-    print("\nEncerrando a Jukebox...")
-    pygame.mixer.quit()
+arduino.close()
+print("Fim da música!")
