@@ -51,8 +51,8 @@ NOTE_C6 = 1047
 # arranjo inteiro sobe uma oitava. Multiplicador da frequencia:
 #   1 = original | 2 = sobe 1 oitava | 4 = sobe 2 oitavas
 # (Se mexer, mude os dois juntos para manter a harmonia.)
-MULT_MELODIA = 1
-MULT_BAIXO  = 1
+MULT_MELODIA = 2
+MULT_BAIXO  = 2
 
 # ---------- Andamento (compasso 3/4) ----------
 # Para deixar a musica mais rapida/lenta, mexa so no BEAT_MS.
