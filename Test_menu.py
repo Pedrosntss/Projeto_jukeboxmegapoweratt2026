@@ -5,7 +5,16 @@ PORTA = 'COM3'  # Linux: "/dev/ttyACM0" | Mac: "/dev/cu.usbmodemXXXX"
 
 print(f"="*30, "\n           Playlists: \n\n1-The legend of zelda\n2-Jojo\n3-Piratas do Caribe\n\n","="*30)
 
-
+try:
+    usuario = int(input(""))
+    if usuario == 1: 
+        print("comando para zelda")
+    elif usuario == 2:
+        print("Comando para JoJo")
+    elif usuario == 3:
+        print("Comando para pirata")
+except ValueError:
+    print("Digite o valor valido")
 
     
 
@@ -177,16 +186,7 @@ for i in range(len(melodyNotes)):
     # Aguarda o Arduino terminar o acorde e responder "OK"
     resposta = arduino.readline()
 
-try:
-    usuario = int(input(""))
-    if usuario == 1: 
-        print("comando para zelda")
-    elif usuario == 2:
-        print("Comando para JoJo")
-    elif usuario == 3:
-        print("Comando para pirata")
-except ValueError:
-    print("Digite o valor valido")
+
     
 arduino.close()
 print("Fim da música!")
